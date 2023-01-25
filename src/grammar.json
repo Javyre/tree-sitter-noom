@@ -185,7 +185,7 @@
         },
         {
           "type": "PREC",
-          "value": 6,
+          "value": 60,
           "content": {
             "type": "SYMBOL",
             "name": "fn_call"
@@ -193,7 +193,7 @@
         },
         {
           "type": "PREC",
-          "value": 6,
+          "value": 60,
           "content": {
             "type": "SYMBOL",
             "name": "meth_call"
@@ -244,7 +244,7 @@
         },
         {
           "type": "PREC_LEFT",
-          "value": 1,
+          "value": 10,
           "content": {
             "type": "SEQ",
             "members": [
@@ -282,7 +282,33 @@
         },
         {
           "type": "PREC_LEFT",
-          "value": 2,
+          "value": 15,
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_expr"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": ".."
+                  }
+                ]
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_expr"
+              }
+            ]
+          }
+        },
+        {
+          "type": "PREC_LEFT",
+          "value": 20,
           "content": {
             "type": "SEQ",
             "members": [
@@ -312,7 +338,7 @@
         },
         {
           "type": "PREC_LEFT",
-          "value": 3,
+          "value": 30,
           "content": {
             "type": "SEQ",
             "members": [
@@ -342,7 +368,7 @@
         },
         {
           "type": "PREC_LEFT",
-          "value": 4,
+          "value": 40,
           "content": {
             "type": "SEQ",
             "members": [
@@ -368,7 +394,7 @@
       "members": [
         {
           "type": "PREC",
-          "value": 5,
+          "value": 50,
           "content": {
             "type": "SEQ",
             "members": [
@@ -399,7 +425,7 @@
       "members": [
         {
           "type": "PREC",
-          "value": 6,
+          "value": 60,
           "content": {
             "type": "SEQ",
             "members": [

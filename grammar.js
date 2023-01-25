@@ -46,26 +46,27 @@ module.exports = grammar({
         _expr: $ => choice(
             $.expr_binop,
             $.expr_unop,
-            prec(6, $.fn_call),
-            prec(6, $.meth_call),
+            prec(60, $.fn_call),
+            prec(60, $.meth_call),
             $.expr_path,
             $._expr_primary,
         ),
 
         expr_binop: $ => choice(
-            prec.left(0, seq($._expr, choice("==", "!="), $._expr)),
-            prec.left(1, seq($._expr, choice(">", ">=", "<", "<="), $._expr)),
-            prec.left(2, seq($._expr, choice("+", "-"), $._expr)),
-            prec.left(3, seq($._expr, choice("*", "/"), $._expr)),
-            prec.left(4, seq($._expr, "|>", $._expr)),
+            prec.left(00, seq($._expr, choice("==", "!="), $._expr)),
+            prec.left(10, seq($._expr, choice(">", ">=", "<", "<="), $._expr)),
+            prec.left(15, seq($._expr, choice(".."), $._expr)),
+            prec.left(20, seq($._expr, choice("+", "-"), $._expr)),
+            prec.left(30, seq($._expr, choice("*", "/"), $._expr)),
+            prec.left(40, seq($._expr, "|>", $._expr)),
         ),
 
         expr_unop: $ => choice(
-            prec(5, seq(choice("-", "!"), $._expr)),
+            prec(50, seq(choice("-", "!"), $._expr)),
         ),
 
         expr_path: $ => choice(
-            prec(6, seq($._expr, repeat1(seq(".", $.ident)))),
+            prec(60, seq($._expr, repeat1(seq(".", $.ident)))),
         ),
 
         _expr_primary: $ => choice(
