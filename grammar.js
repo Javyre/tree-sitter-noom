@@ -82,13 +82,23 @@ module.exports = grammar({
             $.ident,
         ),
 
-        expr_string: $ => seq(
-            "\"",
-            repeat(choice(
-                token.immediate(/[^"\\]/), 
-                $.string_esc
-            )),
-            token.immediate("\""),
+        expr_string: $ => choice(
+            seq(
+                "\"",
+                repeat(choice(
+                    token.immediate(/[^"\\]/), 
+                    $.string_esc
+                )),
+                token.immediate("\""),
+            ), 
+            seq(
+                "'",
+                repeat(choice(
+                    token.immediate(/[^'\\]/), 
+                    $.string_esc
+                )),
+                token.immediate("'"),
+            ), 
         ),
         string_esc: $ => token.immediate(/\\./),
 
