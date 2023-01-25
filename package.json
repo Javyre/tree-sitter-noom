@@ -1,0 +1,17 @@
+{
+  "name": "tree-sitter-noom",
+  "version": "0.0.1",
+  "description": "Noom tree-sitter parser",
+  "main": "bindings/node",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Javier A. Pollak",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "nan": "^2.17.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.20.7"
+  }
+}
