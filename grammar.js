@@ -144,7 +144,8 @@ module.exports = grammar({
 
 
         fn_call: $ => seq(
-            choice($._expr, $.builtin_fn, $.require), "(", optional($._call_args), ")"
+            choice($._expr, $.builtin_fn, $.require), 
+            choice(seq( "(", optional($._call_args), ")"), $.expr_string),
         ),
         require: $ => "require",
         builtin_fn: $ => choice(
