@@ -90,6 +90,21 @@
     "fields": {}
   },
   {
+    "type": "builtin_range",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "_expr",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "expr_binop",
     "named": true,
     "fields": {},
@@ -266,6 +281,10 @@
       "types": [
         {
           "type": "_expr",
+          "named": true
+        },
+        {
+          "type": "builtin_range",
           "named": true
         }
       ]
@@ -461,6 +480,10 @@
   },
   {
     "type": ">=",
+    "named": false
+  },
+  {
+    "type": "@range",
     "named": false
   },
   {

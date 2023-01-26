@@ -39,7 +39,13 @@ module.exports = grammar({
 
         let_stmt: $ => seq("let", $.ident, "=", $._expr),
         assign_stmt: $ => seq($._expr, "=", $._expr),
-        for_stmt: $ => seq("for", "(", $.ident, "in", $._expr, ")", $._expr),
+
+        for_stmt: $ => seq(
+            "for", "(", $.ident, "in", 
+                choice($._expr, $.builtin_range), ")", $._expr
+        ),
+        builtin_range: $ => seq("@range", "(", $._expr, ",", $._expr, ")"),
+
         break_stmt: $ => "break",
         return_stmt: $ => seq("return", $._expr),
 
