@@ -54,6 +54,8 @@ module.exports = grammar({
 
         expr_binop: $ => choice(
             prec.left(00, seq($._expr, choice("==", "!="), $._expr)),
+            prec.left(03, seq($._expr, choice("or"), $._expr)),
+            prec.left(02, seq($._expr, choice("and"), $._expr)),
             prec.left(10, seq($._expr, choice(">", ">=", "<", "<="), $._expr)),
             prec.left(15, seq($._expr, choice(".."), $._expr)),
             prec.left(20, seq($._expr, choice("+", "-"), $._expr)),

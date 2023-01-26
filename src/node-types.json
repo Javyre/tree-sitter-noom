@@ -472,6 +472,10 @@
     "named": false
   },
   {
+    "type": "and",
+    "named": false
+  },
+  {
     "type": "assert",
     "named": false
   },
@@ -549,6 +553,10 @@
   },
   {
     "type": "next",
+    "named": false
+  },
+  {
+    "type": "or",
     "named": false
   },
   {
