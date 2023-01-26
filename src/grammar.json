@@ -242,6 +242,14 @@
           "name": "expr_path"
         },
         {
+          "type": "PREC",
+          "value": 60,
+          "content": {
+            "type": "SYMBOL",
+            "name": "expr_index"
+          }
+        },
+        {
           "type": "SYMBOL",
           "name": "_expr_primary"
         }
@@ -541,6 +549,27 @@
               }
             ]
           }
+        }
+      ]
+    },
+    "expr_index": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_expr"
+        },
+        {
+          "type": "STRING",
+          "value": "["
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_expr"
+        },
+        {
+          "type": "STRING",
+          "value": "]"
         }
       ]
     },

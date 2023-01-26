@@ -24,6 +24,10 @@
         "named": true
       },
       {
+        "type": "expr_index",
+        "named": true
+      },
+      {
         "type": "expr_nil",
         "named": true
       },
@@ -160,6 +164,21 @@
   },
   {
     "type": "expr_if",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "_expr",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "expr_index",
     "named": true,
     "fields": {},
     "children": {

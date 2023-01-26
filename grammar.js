@@ -55,6 +55,7 @@ module.exports = grammar({
             prec(60, $.fn_call),
             prec(60, $.meth_call),
             $.expr_path,
+            prec(60, $.expr_index),
             $._expr_primary,
         ),
 
@@ -76,6 +77,7 @@ module.exports = grammar({
         expr_path: $ => choice(
             prec(60, seq($._expr, repeat1(seq(".", $.ident)))),
         ),
+        expr_index: $ => seq($._expr, "[", $._expr, "]"),
 
         _expr_primary: $ => choice(
             $.expr_string,
