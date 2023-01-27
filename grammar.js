@@ -18,6 +18,7 @@ const sep_by_1 = (sep, par) => seq(
     par, repeat(seq(sep, par)), optional(sep)
 );
 const sep_by_0 = (sep, par) => optional(sep_by_1(sep, par));
+const parens = (...par) => seq("(", ...par, ")");
 
 module.exports = grammar({
     name: 'noom',
@@ -59,14 +60,19 @@ module.exports = grammar({
             $._expr
         ),
 
-        let_stmt: $ => seq("let", $.ident, "=", $._expr),
+        let_stmt: $ => seq(
+            "let", $.ident, 
+            optional(parens(optional($._decl_args))),
+            "=", $._expr
+        ),
         assign_stmt: $ => seq($._expr, "=", $._expr),
 
         for_stmt: $ => seq(
-            "for", "(", $.ident, "in", 
-                choice($._expr, $.builtin_range), ")", $._expr
+            "for", parens(
+                $.ident, "in", choice($._expr, $.builtin_range)
+            ), $._expr
         ),
-        builtin_range: $ => seq("@range", "(", $._expr, ",", $._expr, ")"),
+        builtin_range: $ => seq("@range", parens($._expr, ",", $._expr)),
 
         break_stmt: $ => "break",
         return_stmt: $ => seq("return", $._expr),
@@ -151,13 +157,13 @@ module.exports = grammar({
             seq(
                 choice(
                     seq(".", $._ident_immediate,
-                        optional(seq("(", optional($._decl_args), ")"))),
+                        optional(parens(optional($._decl_args)))),
                     seq(".[", $._expr, "]"),
                 ),
             ":", $._expr),
             $._expr,
         ),
-        expr_paren: $ => seq("(", $._expr, ")"),
+        expr_paren: $ => parens($._expr),
         expr_block: $ => seq(
             ".{",
             $._block_body,
@@ -173,9 +179,7 @@ module.exports = grammar({
         ),
         expr_if: $ => prec.right(seq(
             "if",
-            "(",
-            $._expr,
-            ")",
+            parens($._expr),
             $._expr,
             //repeat(seq("else", "if", $._expr)),
             optional(seq("else", $._expr)),
@@ -184,7 +188,7 @@ module.exports = grammar({
 
         fn_call: $ => seq(
             choice($._expr_callable, $.builtin_fn, $.require), 
-            choice(seq( "(", optional($._call_args), ")"), $.expr_string),
+            choice(parens(optional($._call_args)), $.expr_string),
         ),
         require: $ => "require",
         builtin_fn: $ => choice(
@@ -214,7 +218,7 @@ module.exports = grammar({
         ),
 
         meth_call: $ => seq(
-            $._expr, "->", $.ident, "(", optional($._call_args), ")"
+            $._expr, "->", $.ident, parens(optional($._call_args))
         ),
 
         _call_args: $ => sep_by_1(",", $._expr),
