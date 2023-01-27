@@ -1,3 +1,24 @@
+const PREC = {
+    eq: 0,
+    or: 2,
+    and: 3,
+    ineq: 4,
+    concat: 5,
+    add: 6,
+    mult: 7,
+    pipe: 8,
+    unary: 9,
+    path: 10,
+    fn_call: 11,
+    meth_call: 11,
+    index: 11,
+};
+
+const sep_by_1 = (sep, par) => seq(
+    par, repeat(seq(sep, par)), optional(sep)
+);
+const sep_by_0 = (sep, par) => optional(sep_by_1(sep, par));
+
 module.exports = grammar({
     name: 'noom',
 
@@ -7,6 +28,7 @@ module.exports = grammar({
         $._block_body,
         $._table_entry,
         $._expr_primary,
+        $._expr_callable,
     ],
 
     supertypes: $ => [
@@ -52,30 +74,30 @@ module.exports = grammar({
         _expr: $ => choice(
             $.expr_binop,
             $.expr_unop,
-            prec(60, $.fn_call),
-            prec(60, $.meth_call),
+            prec(PREC.fn_call, $.fn_call),
+            prec(PREC.meth_call, $.meth_call),
             $.expr_path,
-            prec(60, $.expr_index),
+            prec(PREC.index, $.expr_index),
             $._expr_primary,
         ),
 
         expr_binop: $ => choice(
-            prec.left(00, seq($._expr, choice("==", "!="), $._expr)),
-            prec.left(03, seq($._expr, choice("or"), $._expr)),
-            prec.left(02, seq($._expr, choice("and"), $._expr)),
-            prec.left(10, seq($._expr, choice(">", ">=", "<", "<="), $._expr)),
-            prec.left(15, seq($._expr, choice(".."), $._expr)),
-            prec.left(20, seq($._expr, choice("+", "-"), $._expr)),
-            prec.left(30, seq($._expr, choice("*", "/"), $._expr)),
-            prec.left(40, seq($._expr, "|>", $._expr)),
+            prec.left(PREC.eq, seq($._expr, choice("==", "!="), $._expr)),
+            prec.left(PREC.or, seq($._expr, choice("or"), $._expr)),
+            prec.left(PREC.and, seq($._expr, choice("and"), $._expr)),
+            prec.left(PREC.ineq, seq($._expr, choice(">", ">=", "<", "<="), $._expr)),
+            prec.left(PREC.concat, seq($._expr, choice(".."), $._expr)),
+            prec.left(PREC.add, seq($._expr, choice("+", "-"), $._expr)),
+            prec.left(PREC.mult, seq($._expr, choice("*", "/"), $._expr)),
+            prec.left(PREC.pipe, seq($._expr, "|>", $._expr)),
         ),
 
         expr_unop: $ => choice(
-            prec(50, seq(choice("-", "!"), $._expr)),
+            prec(PREC.unary, seq(choice("-", "!"), $._expr)),
         ),
 
         expr_path: $ => choice(
-            prec(60, seq($._expr, repeat1(seq(".", $.ident)))),
+            prec(PREC.path, seq($._expr, repeat1(seq(".", $.ident)))),
         ),
         expr_index: $ => seq($._expr, "[", $._expr, "]"),
 
@@ -90,6 +112,13 @@ module.exports = grammar({
             $.expr_if,
             $.expr_nil,
             $.expr_number,
+            $.ident,
+        ),
+        _expr_callable: $ => choice(
+            $.expr_paren,
+            $.expr_func,
+            $.expr_path,
+            $.expr_index,
             $.ident,
         ),
 
@@ -113,20 +142,22 @@ module.exports = grammar({
         ),
         string_esc: $ => token.immediate(/\\./),
 
-        expr_tag: $ => /\.[a-zA-Z_][[a-zA-Z0-9_]*]/,
+        expr_tag: $ => seq(".", $._ident_immediate),
         expr_bool: $ => choice("true", "false"),
         expr_nil: $ => "nil",
         expr_number: $ => /[0-9]+/,
-        expr_table: $ => seq(
-            "{",
-            optional(seq($._table_entry, repeat(seq(",", $._table_entry)))),
-            "}"
-        ),
-        expr_paren: $ => seq("(", $._expr, ")"),
+        expr_table: $ => seq("{", sep_by_0(",", $._table_entry), "}"),
         _table_entry: $ => choice(
-            seq(choice($.ident, seq("[", $._expr, "]")), "=", $._expr),
+            seq(
+                choice(
+                    seq(".", $._ident_immediate,
+                        optional(seq("(", optional($._decl_args), ")"))),
+                    seq(".[", $._expr, "]"),
+                ),
+            ":", $._expr),
             $._expr,
         ),
+        expr_paren: $ => seq("(", $._expr, ")"),
         expr_block: $ => seq(
             ".{",
             $._block_body,
@@ -152,7 +183,7 @@ module.exports = grammar({
 
 
         fn_call: $ => seq(
-            choice($._expr, $.builtin_fn, $.require), 
+            choice($._expr_callable, $.builtin_fn, $.require), 
             choice(seq( "(", optional($._call_args), ")"), $.expr_string),
         ),
         require: $ => "require",
@@ -183,14 +214,16 @@ module.exports = grammar({
         ),
 
         meth_call: $ => seq(
-            $._expr, ":", $.ident, "(", optional($._call_args), ")"
+            $._expr, "->", $.ident, "(", optional($._call_args), ")"
         ),
 
-        _call_args: $ => seq($._expr, repeat(seq(",", $._expr))),
-        _decl_args: $ => seq($.ident, repeat(seq(",", $.ident))),
+        _call_args: $ => sep_by_1(",", $._expr),
+        _decl_args: $ => sep_by_1(",", $.ident),
 
-        ident: $ => choice(
-            /[a-zA-Z_][a-zA-Z0-9_]*/
+        ident: $ => /[a-zA-Z_][a-zA-Z0-9_]*/,
+        _ident_immediate: $ => alias(
+            token.immediate(/[a-zA-Z_][a-zA-Z0-9_]*/), 
+            $.ident
         ),
     }
 });
