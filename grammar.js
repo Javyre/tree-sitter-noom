@@ -63,7 +63,7 @@ module.exports = grammar({
         let_stmt: $ => seq(
             "let", $.ident, 
             optional(parens(optional($._decl_args))),
-            "=", $._expr
+            optional(seq("=", $._expr)),
         ),
         assign_stmt: $ => seq($._expr, "=", $._expr),
 
@@ -145,6 +145,11 @@ module.exports = grammar({
                 )),
                 token.immediate("'"),
             ), 
+            // TODO: make this validate string end marker matching the string
+            // begin marker. (this might require writing a custom lexer...)
+            seq(
+                /\[=*\[([^\]=]|\][^\]=]|\]=*[^\]=])*\]=*\]/,
+            ),
         ),
         string_esc: $ => token.immediate(/\\./),
 
