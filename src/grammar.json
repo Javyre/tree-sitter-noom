@@ -896,46 +896,42 @@
               "type": "CHOICE",
               "members": [
                 {
+                  "type": "SYMBOL",
+                  "name": "ident"
+                },
+                {
                   "type": "SEQ",
                   "members": [
                     {
                       "type": "STRING",
-                      "value": "."
+                      "value": "fn"
                     },
                     {
                       "type": "SYMBOL",
-                      "name": "_ident_immediate"
+                      "name": "ident"
                     },
                     {
-                      "type": "CHOICE",
+                      "type": "SEQ",
                       "members": [
                         {
-                          "type": "SEQ",
+                          "type": "STRING",
+                          "value": "("
+                        },
+                        {
+                          "type": "CHOICE",
                           "members": [
                             {
-                              "type": "STRING",
-                              "value": "("
+                              "type": "SYMBOL",
+                              "name": "_decl_args"
                             },
                             {
-                              "type": "CHOICE",
-                              "members": [
-                                {
-                                  "type": "SYMBOL",
-                                  "name": "_decl_args"
-                                },
-                                {
-                                  "type": "BLANK"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "STRING",
-                              "value": ")"
+                              "type": "BLANK"
                             }
                           ]
                         },
                         {
-                          "type": "BLANK"
+                          "type": "STRING",
+                          "value": ")"
                         }
                       ]
                     }
@@ -946,7 +942,7 @@
                   "members": [
                     {
                       "type": "STRING",
-                      "value": ".["
+                      "value": "["
                     },
                     {
                       "type": "SYMBOL",
@@ -1015,7 +1011,11 @@
       "members": [
         {
           "type": "STRING",
-          "value": ".("
+          "value": "fn"
+        },
+        {
+          "type": "STRING",
+          "value": "("
         },
         {
           "type": "CHOICE",

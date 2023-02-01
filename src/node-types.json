@@ -468,15 +468,7 @@
     "named": false
   },
   {
-    "type": ".(",
-    "named": false
-  },
-  {
     "type": "..",
-    "named": false
-  },
-  {
-    "type": ".[",
     "named": false
   },
   {
@@ -569,6 +561,10 @@
   },
   {
     "type": "false",
+    "named": false
+  },
+  {
+    "type": "fn",
     "named": false
   },
   {

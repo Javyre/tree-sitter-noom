@@ -161,9 +161,9 @@ module.exports = grammar({
         _table_entry: $ => choice(
             seq(
                 choice(
-                    seq(".", $._ident_immediate,
-                        optional(parens(optional($._decl_args)))),
-                    seq(".[", $._expr, "]"),
+                    $.ident,
+                    seq("fn", $.ident, parens(optional($._decl_args))),
+                    seq("[", $._expr, "]"),
                 ),
             ":", $._expr),
             $._expr,
@@ -175,7 +175,7 @@ module.exports = grammar({
             "}"
         ),
         expr_func: $ => seq(
-            ".(",
+            "fn", "(",
             optional($._decl_args),
             ")",
             "{",
